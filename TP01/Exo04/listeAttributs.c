@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     struct stat fileinfo = {0};
     fstat(fileno(fd), &fileinfo);
 
-    printf("Inode number is %ld\n", fileinfo.st_ino);
+    printf("Inode number of %s is %ld\n", argv[1], fileinfo.st_ino);
 
     return EXIT_SUCCESS;
 }
