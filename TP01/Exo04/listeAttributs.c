@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
     fputs("blublu", fd);
     print_inode(path);
 
+    printf("Press Enter :");
     getchar();
     print_inode(path);
 
