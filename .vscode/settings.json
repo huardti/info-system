@@ -3,6 +3,8 @@
     "cmake.debugConfig": {
         "args": [
             "${workspaceFolder}/BLAHBLAH"
+            , "~"
+            , "/tmp"
         ]
     }
 }
