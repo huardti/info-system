@@ -24,13 +24,14 @@ int main(int argc, char *argv[])
     char* args[argc + 2];
     args[0] = "ls";
     args[1] = "-al";
+    args[2] = argv[1];
 
-    int i;
-    for(i = 0 ; i < argc - 1 ; ++i)
-    {
-        args[i + 2] = argv[i + 1];
-    }
-    args[i + 2] = NULL;
+    // int i;
+    // for(i = 0 ; i < argc - 1 ; ++i)
+    // {
+    //     args[i + 2] = argv[i + 1];
+    // }
+    // args[i + 2] = NULL;
 
     execvp(args[0], args);
 
