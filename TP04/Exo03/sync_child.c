@@ -9,7 +9,7 @@
 
 int main(void)
 {
-    SEMAPHORE sem = sem_create(FALSE, "/tmp/lol", 2);
+    SEMAPHORE sem = sem_create(TRUE, "", 0);
     sem_init(sem, (unsigned short[]){1});
 
     P(sem);
