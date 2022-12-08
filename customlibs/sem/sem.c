@@ -42,7 +42,34 @@ SEMAPHORE sem_create(int private, char* filepath, int id)
         }
     }
 
-    SEMAPHORE return_value = semget(semkey, 1, IPC_CREAT | IPC_EXCL | 0666);
+    SEMAPHORE return_value = semget(semkey, 1, IPC_CREAT | 0666);
+    if(return_value == -1)
+    {
+        perror("semget()");
+        exit(EXIT_FAILURE);
+    }
+
+    return return_value;
+}
+SEMAPHORE sem_use(int private, char* filepath, int id)
+{
+    key_t semkey;
+
+    if(private)
+    {
+        semkey = IPC_PRIVATE;
+    }
+    else
+    {
+        semkey = ftok(filepath, id);
+        if(semkey == -1)
+        {
+            perror("ftok()");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    SEMAPHORE return_value = semget(semkey, 1, 0666);
     if(return_value == -1)
     {
         perror("semget()");
