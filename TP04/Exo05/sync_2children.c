@@ -20,7 +20,7 @@ int main(void)
 
     for(int i = 0 ; i < 2 ; ++i)
     {
-        sem_init(sem[i], (unsigned short[]){1});
+        sem_init(sem[i], (unsigned short[]){0});
     }
 
     pid_t children_pids[2] = {0};
