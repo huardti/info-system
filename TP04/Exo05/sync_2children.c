@@ -51,6 +51,7 @@ int main(void)
                 printf("[Child PID %d] NEXT !\n", getpid());
             }
 
+            // Should never be reached
             printf("[Child] PID %d Exiting", getpid());
             return EXIT_SUCCESS;
         }
