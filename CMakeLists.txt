@@ -7,7 +7,16 @@ endif()
 set(CMAKE_BUILD_PARALLEL_LEVEL 8)
 
 project(E2I5_UNIX VERSION 1.0 LANGUAGES C)
-add_compile_options(-std=c11 -g -Wall -Wextra -Werror -Wsign-conversion -pedantic-errors)
+add_compile_options(
+    -std=c11
+    -g
+    -Wall
+    -Wextra
+    -Werror
+    -Wsign-conversion
+    -pedantic-errors
+    -lpthread
+)
 
 add_library(sem STATIC
     customlibs/sem/sem.h
