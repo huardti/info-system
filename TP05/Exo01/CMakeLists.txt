@@ -19,3 +19,4 @@ add_executable(${ProjectId} ${files_src})
 
 target_include_directories(${ProjectId} PUBLIC ../../customlibs/sem)
 target_link_libraries(${ProjectId} PUBLIC sem)
+target_link_libraries(${ProjectId} PRIVATE Threads::Threads)

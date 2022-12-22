@@ -15,8 +15,11 @@ add_compile_options(
     -Werror
     -Wsign-conversion
     -pedantic-errors
-    -lpthread
 )
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
 
 add_library(sem STATIC
     customlibs/sem/sem.h
