@@ -9,7 +9,6 @@
 
 typedef struct _threadargs
 {
-    int                 return_value;
     char*               character;
     pthread_cond_t*     cv;
     pthread_mutex_t*    mutex;
@@ -41,14 +40,12 @@ int main(void)
 
     threadargs keyboard_args =
     {
-        .return_value   = -1,
         .character      = &common_character,
         .cv             = &cv,
         .mutex          = &mutex
     };
     threadargs display_args =
     {
-        .return_value   = -1,
         .character      = &common_character,
         .cv             = &cv,
         .mutex          = &mutex
@@ -75,12 +72,28 @@ int main(void)
         exit(EXIT_FAILURE);
     }
 
-    pthread_join(keyboard_thread, NULL);
-    pthread_join(display_thread, NULL);
+    // Wait for the threads to finish
+    int* keyboard_return = NULL;
+    if(pthread_join(keyboard_thread, (void*) &keyboard_return) != 0)
+    {
+        perror("pthread_join()");
+        exit(EXIT_FAILURE);
+    }
+    int* display_return = NULL;
+    if(pthread_join(display_thread, (void*) &display_return) != 0)
+    {
+        perror("pthread_join()");
+        exit(EXIT_FAILURE);
+    }
+    ////////////////////////////////////////////////////////////////////////////
 
-    printf("Keyboard : %d\tDisplay : %d\n",
-        keyboard_args.return_value, display_args.return_value);
+    // Display return values
+    printf("Keyboard : %d\tDisplay : %d\n", *keyboard_return, *display_return);
+    ////////////////////////////////////////////////////////////////////////////
 
+    // Free allocated resources
+    free(keyboard_return);
+    free(display_return);
     pthread_cond_destroy(&cv);
     pthread_mutex_destroy(&mutex);
 
@@ -115,8 +128,10 @@ void* keyboard_main(void* args)
 
     pthread_mutex_unlock(cargs->mutex);
 
-    cargs->return_value = 0;
-    return NULL;
+    int* return_value = malloc(sizeof(int));
+    *return_value = 2;
+
+    return return_value;
 }
 void* display_main(void* args)
 {
@@ -137,8 +152,10 @@ void* display_main(void* args)
 
     pthread_mutex_unlock(cargs->mutex);
 
-    cargs->return_value = 0;
-    return NULL;
+    int* return_value = malloc(sizeof(int));
+    *return_value = 3;
+
+    return return_value;
 }
 
 void keyboard_print(char* string)
