@@ -21,6 +21,7 @@ void display_print(char* string);
 
 int main(void)
 {
+    // Allocate kernel resources (CV + Mutex)
     pthread_cond_t cv;
     if(pthread_cond_init(&cv, NULL) != 0)
     {
@@ -33,11 +34,10 @@ int main(void)
         perror("pthread_mutex_init()");
         exit(EXIT_FAILURE);
     }
+    ////////////////////////////////////////////////////////////////////////////
 
-    pthread_t keyboard_thread, display_thread;
-
+    // Initialize thread arguments
     char common_character = '\0';
-
     threadargs keyboard_args =
     {
         .character      = &common_character,
@@ -50,7 +50,10 @@ int main(void)
         .cv             = &cv,
         .mutex          = &mutex
     };
+    ////////////////////////////////////////////////////////////////////////////
 
+    // Start the threads
+    pthread_t keyboard_thread, display_thread;
     if
     (
         pthread_create
@@ -71,6 +74,7 @@ int main(void)
         perror("pthread_create");
         exit(EXIT_FAILURE);
     }
+    ////////////////////////////////////////////////////////////////////////////
 
     // Wait for the threads to finish
     int* keyboard_return = NULL;
@@ -96,37 +100,50 @@ int main(void)
     free(display_return);
     pthread_cond_destroy(&cv);
     pthread_mutex_destroy(&mutex);
+    ////////////////////////////////////////////////////////////////////////////
 
     return EXIT_SUCCESS;
 }
 
 void* keyboard_main(void* args)
 {
+    // Temporary pointer to avoid casting a billion times later on
     threadargs* cargs = (threadargs*) args;
 
+    // Lock the mutex
     pthread_mutex_lock(cargs->mutex);
+        // Display a greeting
         keyboard_print("Hello !");
+    // Signal that the greeting is done
     pthread_cond_signal(cargs->cv);
+    // Unlock the mutex, wait for a signal back, lock the mutex
     pthread_cond_wait(cargs->cv, cargs->mutex);
 
+    // Temporary variable for user input
     char ch;
 
     while(*(cargs->character) != 'F')
     {
+        // Get any character different than '\n', otherwise loop
         do
         {
             printf("Enter a character : ");
             scanf("%c", cargs->character);
         } while( *(cargs->character) == '\n' );
 
-        // Flush buffer
+        // Flush buffer to keep only the first character
         while ((ch = getchar()) != '\n' && ch != EOF);
 
+        // Signal that we're done getting a character
         pthread_cond_signal(cargs->cv);
+        // Unlock the mutex, wait for a signal back, lock the mutex
         pthread_cond_wait(cargs->cv, cargs->mutex);
     }
 
+    // Unlock the mutex
     pthread_mutex_unlock(cargs->mutex);
+    // Signal that we're exiting
+    pthread_cond_signal(cargs->cv);
 
     int* return_value = malloc(sizeof(int));
     *return_value = 2;
@@ -135,22 +152,32 @@ void* keyboard_main(void* args)
 }
 void* display_main(void* args)
 {
+    // Temporary pointer to avoid casting a billion times later on
     threadargs* cargs = (threadargs*) args;
 
+    // Lock the mutex
     pthread_mutex_lock(cargs->mutex);
+        // Display a greeting
         display_print("Hello !");
+    // Signal that the greeting is done
     pthread_cond_signal(cargs->cv);
 
     while(*(cargs->character) != 'F')
     {
+        // Unlock the mutex, wait for a signal back, lock the mutex
         pthread_cond_wait(cargs->cv, cargs->mutex);
-
+        
+        // Display the received character
         printf("Received '%c'\n", *(cargs->character));
 
+        // Signal that displaying is done
         pthread_cond_signal(cargs->cv);
     }
 
+    // Unlock the mutex
     pthread_mutex_unlock(cargs->mutex);
+    // Signal that we're exiting
+    pthread_cond_signal(cargs->cv);
 
     int* return_value = malloc(sizeof(int));
     *return_value = 3;
