@@ -54,18 +54,22 @@ int main(void)
         .mutex          = &mutex
     };
 
-    int pthread_return;
-
-    pthread_return = pthread_create
-        (&keyboard_thread, NULL, keyboard_main, (void*) &keyboard_args);
-    if(pthread_return != 0)
+    if
+    (
+        pthread_create
+            (&keyboard_thread, NULL, keyboard_main, (void*) &keyboard_args)
+        != 0
+    )
     {
         perror("pthread_create");
         exit(EXIT_FAILURE);
     }
-    pthread_return = pthread_create
-        (&display_thread, NULL, display_main, (void*) &display_args);
-    if(pthread_return != 0)
+    if
+    (
+        pthread_create
+            (&display_thread, NULL, display_main, (void*) &display_args)
+        != 0
+    )
     {
         perror("pthread_create");
         exit(EXIT_FAILURE);
