@@ -4,9 +4,6 @@
 #include <sys/types.h>
 #include <pthread.h>
 
-#define TRUE  1
-#define FALSE 0
-
 typedef struct _threadargs
 {
     char*               character;
