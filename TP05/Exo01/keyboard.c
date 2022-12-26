@@ -41,15 +41,17 @@ int main(void)
 
     threadargs keyboard_args =
     {
-        .character = &common_character,
-        .cv = &cv,
-        .mutex = &mutex
+        .return_value   = -1,
+        .character      = &common_character,
+        .cv             = &cv,
+        .mutex          = &mutex
     };
     threadargs display_args =
     {
-        .character = &common_character,
-        .cv = &cv,
-        .mutex = &mutex
+        .return_value   = -1,
+        .character      = &common_character,
+        .cv             = &cv,
+        .mutex          = &mutex
     };
 
     int pthread_return;
