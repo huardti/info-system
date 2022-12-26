@@ -93,6 +93,7 @@ int main(void)
     {
         for (colonne = 0; colonne < TAILLE_TABLEAU; ++colonne)
         {
+            pthread_join(multhreads[ligne][colonne], NULL);
             printf("%5d ",MC[ligne][colonne]);
         }
         printf("\n");
