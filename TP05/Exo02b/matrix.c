@@ -35,7 +35,6 @@ void* multhread_main(void* args);
 
 int main(void)
 {
-    int taille = TAILLE_TABLEAU;
     int ligne, colonne;
 
     // Initialisation des matrices MA et MB
@@ -53,9 +52,9 @@ int main(void)
 
     /* Calcul de la matrice resultante */
     int id = 0;
-    for(ligne = 0; ligne < taille; ligne++)
+    for(ligne = 0; ligne < TAILLE_TABLEAU; ++ligne)
     {
-        for (colonne = 0; colonne < taille; colonne++)
+        for (colonne = 0; colonne < TAILLE_TABLEAU; ++colonne)
         {
             multhreadargs[ligne][colonne] = (threadargs)
             {
@@ -90,9 +89,9 @@ int main(void)
 
     /* Affichage du resultat */
     printf("MATRICE: resultat de la matrice C;\n");
-    for(ligne = 0; ligne < taille; ligne++)
+    for(ligne = 0; ligne < TAILLE_TABLEAU; ++ligne)
     {
-        for (colonne = 0; colonne < taille; colonne++)
+        for (colonne = 0; colonne < TAILLE_TABLEAU; ++colonne)
         {
             printf("%5d ",MC[ligne][colonne]);
         }
